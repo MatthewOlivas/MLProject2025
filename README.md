@@ -1,4 +1,4 @@
-# 🚗 Used Car Price Prediction
+# Used Car Price Prediction
 
 This project predicts used car prices based on various features scraped from listings. The dataset was cleaned, engineered, and used to train and evaluate four different machine learning models.
 
