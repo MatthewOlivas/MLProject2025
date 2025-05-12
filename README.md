@@ -1,46 +1,89 @@
-# MLProject2025
-# Model#4 Gradiant Boosted Tree
-# Vehicle Price Prediction
+# 🚗 Used Car Price Prediction
 
-This project uses Craigslist vehicle listings to predict used car prices based on various features like age, odometer reading, condition, transmission type, and title status. The models we built are KNN, Decision Tree, Linear Regression, and Gradiant Boosted tree. The dataset is loaded directly from Kaggle using `kagglehub`.
+This project predicts used car prices based on various features scraped from listings. The dataset was cleaned, engineered, and used to train and evaluate four different machine learning models.
 
-## File: `XGBoosted.ipynb`
-## How to run:
-Press the start button when you load into google colab for each of the files.
+---
 
-### What This Script Does:
+## Data Preprocessing
 
-1. **Loads Data**
-   - Loads `vehicles.csv` from the "austinreese/craigslist-carstrucks-data" Kaggle dataset using `kagglehub`.
+- Dropped irrelevant columns like `lat`, `long`, `posting_date`, etc.
+- Removed rows with invalid or extreme `price` and `year` values.
+- Added a new `age` column derived from the year of the car.
+- Filled missing numeric values with the **mean**.
+- Filled missing categorical values with **'alternatives'**.
+- Grouped rare categories into **'uncommon'** to reduce dimensionality.
+- Used **one-hot encoding** for categorical features.
+- Scaled numeric features (`age` and `odometer`) using **StandardScaler**.
 
-2. **Cleans and Prepares Data**
-   - Drops irrelevant columns.
-   - Filters unrealistic price and year values.
-   - Adds a new column `age` from the vehicle's manufacturing year.
-   - One-hot encodes categorical variables.
+---
 
-3. **Splits and Scales Data**
-   - Splits data into training and testing sets.
-   - Normalizes the `odometer` column using `StandardScaler`.
+## Our Models Trained
 
-4. **Trains a Model**
-   - Trains an `XGBRegressor` on the training data.
+### 1. ** Decision Tree **
+- Trained on full preprocessed data.
+- Evaluated using MAE, MSE, RMSE, and R² score.
+- Offers built-in feature importance analysis.
+- Great balance of performance and interpretability.
 
-5. **Evaluates Performance**
-   - Calculates metrics such as MAE, RMSE, R², MAPE, and more.
-   - Displays a performance table using `tabulate`.
+### 2. ** KNN **
+- Sequentially builds an ensemble of weak learners.
+- Generally offers better performance than Random Forest.
+- More sensitive to parameter tuning and overfitting.
 
-6. **Visualizations**
-   - Bar plot of the top 20 most important features (using permutation importance).
-   - Scatter plot comparing actual vs. predicted prices.
-   - Histogram showing the distribution of vehicle ages.
+### 3. ** Gradient Boosted Tree Regressor **
+- High-performance version of Gradient Boosting.
+- Efficient, fast, and handles regularization well.
+- Typically outperforms the other models in accuracy.
+- Useful for Kaggle-style competitive modeling.
 
-7. **Predicts a Sample Input**
-   - Makes a prediction for a predefined vehicle input (e.g., a 5-year-old sedan in good condition).
+### 4. ** Linear Regression **
+- Simple and interpretable baseline.
+- Trained in two versions:
+  - **Full feature set**
+  - **Top 10 features** based on **permutation importance**
+- Helps understand the linear relationship between features and price.
+- Not as accurate as tree-based models, but excellent for feature insight.
 
-## Dependencies
+---
 
-You can install all necessary packages with:
+## Evaluation Metrics
 
-```bash
-pip install pandas numpy matplotlib seaborn scikit-learn xgboost kagglehub tabulate
+Each model was evaluated using:
+
+- **MAE** (Mean Absolute Error)
+- **MSE** (Mean Squared Error)
+- **RMSE** (Root Mean Squared Error)
+- **R² Score**
+
+Example (from Linear Regression):
+```
+MAE: 2889.73  
+MSE: 18322137.34  
+RMSE: 4280.44  
+R² Score: 0.65
+```
+
+---
+
+## Feature Importance
+
+We used **permutation importance** and **built-in feature importances** to rank the most valuable predictors of price. Common top features across models include:
+
+- `age`
+- `odometer`
+- `model`
+- `manufacturer`
+- `condition`
+- `drive`
+
+---
+
+## Conclusion
+
+- **XGBoost** offered the best accuracy overall.
+- **KNN** gave solid results with good feature importance.
+- **Decision Tree** was close behind XGBoost in accuracy.
+- **Linear Regression** was simple but offered valuable feature insights.
+- Reducing to the **top 10 features** made Linear Regression more efficient with minimal performance drop.
+
+---
